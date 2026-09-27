@@ -1,8 +1,11 @@
+import os
+
+
 def hash_func(key, size):
     return sum(ord(ch) for ch in key) % size
 
 
-def hash_table_overlay(text, size=100):
+def hash_table_overlay(text, size=50):
     table = [None] * size
     for word in text.split():
         idx = hash_func(word, size)
@@ -12,15 +15,20 @@ def hash_table_overlay(text, size=100):
     return table
 
 
+# 1. Создаём input.txt, если его нет
+if not os.path.exists("input.txt"):
+    with open("input.txt", "w", encoding="utf-8") as f:
+        f.write("hello world this is a test hello world\n")
+        f.write("python is a great language\n")
 
-filename = "input.txt"
-with open(filename, "r", encoding="utf-8") as f:
+# 2. Читаем из файла
+with open("input.txt", "r", encoding="utf-8") as f:
     text = f.read()
 
-
+# 3. Строим таблицу
 table = hash_table_overlay(text, size=50)
 
-
+# 4. Записываем результат
 with open("hash_table_overlay.txt", "w", encoding="utf-8") as f:
     for i, val in enumerate(table):
         if val is not None:

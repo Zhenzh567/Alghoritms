@@ -1,4 +1,7 @@
 def is_valid(text):
+    if text == "":
+        return False
+    
     stack = []
     
     for char in text:

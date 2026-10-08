@@ -1,7 +1,23 @@
 def is_valid(text):
-	while "()" in text or "[]" in text or "{}" in text:
-		text = text.replace("()","")
-		text = text.replace("[]","")
-		text = text.replace("{}","")
-	return not text
-print(is_valid("(){}"))
+    stack = []
+    
+    for char in text:
+        if char in "([{":
+            stack.append(char)
+        
+        elif char == ")":
+            if not stack or stack[-1] != "(":
+                return False
+            stack.pop()
+        
+        elif char == "]":
+            if not stack or stack[-1] != "[":
+                return False
+            stack.pop()
+        
+        elif char == "}":
+            if not stack or stack[-1] != "{":
+                return False
+            stack.pop()
+    
+    return not stack

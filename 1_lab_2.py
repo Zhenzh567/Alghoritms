@@ -1,72 +1,117 @@
-def calculate(s):
-    s = s.replace(' ', '')
+def is_valid(text):
+    if text == "":
+        return False
+    
+    stack = []
+    for ch in text:
+        if ch == "(":
+            stack.append(ch)
+        if ch == ")":
+            if len(stack) == 0:
+                return False
+            stack.pop()
+    
+    if len(stack) == 0:
+        return True
+    else:
+        return False
 
+
+def calculate(s):
+    s = s.replace(" ", "")
+    
     if not is_valid(s):
         raise ValueError("Неправильные скобки")
+    
+    pos = [0]
+    
+    def read_number():
+        start = pos[0]
+        
+        for i in range(pos[0], len(s)):
+            ch = s[i]
+            if ch.isdigit() or ch == ".":
+                pos[0] += 1
+            else:
+                break
+        
+        return float(s[start:pos[0]])
+    
+    def read_factor():
+        ch = s[pos[0]]
+        
+        if ch == "-":
+            pos[0] += 1
+            value = read_factor()
+            return -value
+        
+        if ch == "(":
+            pos[0] += 1
+            value = read_expression()
+            pos[0] += 1
+            return value
+        
+        return read_number()
+    
+    def read_term():
+        result = read_factor()
+        
+        for i in range(pos[0], len(s)):
+            if pos[0] >= len(s):
+                break
+            
+            ch = s[pos[0]]
+            
+            if ch == "*" or ch == "/":
+                pos[0] += 1
+                value = read_factor()
+                
+                if ch == "*":
+                    result = result * value
+                else:
+                    if value == 0:
+                        raise ZeroDivisionError("Деление на ноль")
+                    result = result / value
+            else:
+                break
+        
+        return result
+    
+    def read_expression():
+        result = read_term()
+        
+        for i in range(pos[0], len(s)):
+            if pos[0] >= len(s):
+                break
+            
+            ch = s[pos[0]]
+            
+            if ch == "+" or ch == "-":
+                pos[0] += 1
+                value = read_term()
+                
+                if ch == "+":
+                    result = result + value
+                else:
+                    result = result - value
+            else:
+                break
+        
+        return result
+    
+    result = read_expression()
+    
+    if pos[0] != len(s):
+        raise ValueError("Лишние символы")
+    
+    return result
 
-    while '(' in s:
-        c = s.index(')')
-        o = s.rindex('(', 0, c)
-        inner = s[o+1:c]
-        if o > 0 and s[o-1] == '-':
-            result = -calc(inner)
-            s = s[:o-1] + str(result) + s[c+1:]
-        else:
-            result = calc(inner)
-            s = s[:o] + str(result) + s[c+1:]
 
-    return calc(s)
-
-
-def calc(s):
-    nums = []
-    ops = []
-    i = 0
-    while i < len(s):
-        if s[i].isdigit() or s[i] == '.':
-            num = ''
-            while i < len(s) and (s[i].isdigit() or s[i] == '.'):
-                num += s[i]
-                i += 1
-            nums.append(float(num))
-            continue
-
-        if s[i] == '-' and (i == 0 or s[i-1] in '+-*/'):
-            num = '-'
-            i += 1
-            while i < len(s) and (s[i].isdigit() or s[i] == '.'):
-                num += s[i]
-                i += 1
-            nums.append(float(num))
-            continue
-
-        while ops and ops[-1] in '*/' and s[i] in '+-':
-            apply(nums, ops)
-        ops.append(s[i])
-        i += 1
-
-    while ops:
-        apply(nums, ops)
-
-    return nums[0]
-
-
-def apply(nums, ops):
-    b = nums.pop()
-    a = nums.pop()
-    op = ops.pop()
-    if op == '+': nums.append(a + b)
-    elif op == '-': nums.append(a - b)
-    elif op == '*': nums.append(a * b)
-    elif op == '/':
-        if b == 0:
-            raise ZeroDivisionError("Деление на ноль")
-        nums.append(a / b)
-
-
-def is_valid(text):
-    brackets = ''.join(ch for ch in text if ch in '()')
-    while '()' in brackets:
-        brackets = brackets.replace('()', '')
-    return not brackets
+print(calculate("(2+3)*4"))
+print(calculate("10/(2+3)"))
+print(calculate("(1+2)*(3-4)"))
+print(calculate("2+3*4"))
+print(calculate("1-(-(2+3))"))
+print(calculate("-(2+3)*4"))
+print(calculate("2--3"))
 

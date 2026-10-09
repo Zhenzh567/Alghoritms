@@ -3,18 +3,27 @@ def is_valid(text):
         return False
     
     stack = []
-    for ch in text:
-        if ch == "(":
-            stack.append(ch)
-        if ch == ")":
-            if len(stack) == 0:
+    
+    for char in text:
+        if char in "([{":
+            stack.append(char)
+        
+        elif char == ")":
+            if not stack or stack[-1] != "(":
+                return False
+            stack.pop()
+        
+        elif char == "]":
+            if not stack or stack[-1] != "[":
+                return False
+            stack.pop()
+        
+        elif char == "}":
+            if not stack or stack[-1] != "{":
                 return False
             stack.pop()
     
-    if len(stack) == 0:
-        return True
-    else:
-        return False
+    return not stack
 
 
 def calculate(s):

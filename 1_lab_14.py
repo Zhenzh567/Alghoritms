@@ -29,3 +29,27 @@ with open("hash_table_chains.txt", "w", encoding="utf-8") as f:
             f.write(f"{i}: {chain}\n")
 
 print("Готово. Результат в hash_table_chains.txt")
+
+def hash_func(key, size):
+    return sum(ord(ch) for ch in key) % size
+
+
+def hash_table_chains(text, size=50):
+    table = [[] for _ in range(size)]
+    for word in text.split():
+        idx = hash_func(word, size)
+        table[idx].append(word)
+    return table
+
+
+
+text = "hello world this is a test hello world\npython is a great language"
+
+
+table = hash_table_chains(text, size=50)
+
+
+print("Результат работы хэш-таблицы (метод цепочек):")
+for i, chain in enumerate(table):
+    if chain:  # Если список (цепочка) не пустой
+        print(f"{i}: {chain}")

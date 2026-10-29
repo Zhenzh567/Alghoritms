@@ -33,3 +33,6 @@ with open("hash_table_overlay.txt", "w", encoding="utf-8") as f:
             f.write(f"{i}: {val}\n")
 
 print("Готово. Результат в hash_table_overlay.txt")
+print("Готово. Вот что записано в файл:")
+with open("hash_table_overlay.txt", "r", encoding="utf-8") as f:
+    print(f.read())

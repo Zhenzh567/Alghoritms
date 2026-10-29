@@ -36,3 +36,29 @@ print("Готово. Результат в hash_table_overlay.txt")
 print("Готово. Вот что записано в файл:")
 with open("hash_table_overlay.txt", "r", encoding="utf-8") as f:
     print(f.read())
+
+
+
+
+text = "hello world this is a test hello world\npython is a great language"
+
+def hash_func(key, size):
+    return sum(ord(ch) for ch in key) % size
+
+def hash_table_overlay(text, size=50):
+    table = [None] * size
+    for word in text.split():
+        idx = hash_func(word, size)
+        while table[idx] is not None:
+            idx = (idx + 1) % size
+        table[idx] = word
+    return table
+
+table = hash_table_overlay(text, size=50)
+
+
+print("Результат работы хэш-таблицы:")
+for i, val in enumerate(table):
+    if val is not None:
+        print(f"{i}: {val}")
+

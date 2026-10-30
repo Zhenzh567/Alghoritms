@@ -76,3 +76,24 @@ sll = SinglyLinkedList()
 for x in data: sll.append(x)
 sll.sort()
 sll.print_list()
+
+# --- ТЕСТИРОВАНИЕ ---
+print("--- Лаба 15: Односвязный список ---")
+data = [12.5, -45.1, 9.9, -3.2, 22.8] 
+print("Исходный список:")
+sll = SinglyLinkedList()
+for x in data: 
+    sll.append(x)
+sll.print_list()
+
+print("\n1. Сортировка по сумме цифр целой части (по модулю):")
+sll.sort(key=sum_of_digits)
+sll.print_list()
+
+print("\n2. Добавляем элемент -77.7 в конец:")
+sll.append(-77.7)
+sll.print_list()
+
+print("\n3. Удаляем элемент 9.9:")
+sll.remove(9.9)
+sll.print_list()
